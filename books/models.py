@@ -10,7 +10,6 @@ class Book(models.Model):
         # строковое представление объекта
         return f"Книга: {self.id} Название: {self.title} Автор: {self.author}"
 
-kjasfbjlkasndkjasd
-asifhakjsfhkajkfsl
-ahsbkashdkjasf
-ahsfhkajshfkajshf
+
+class Genre(models.Model):
+    title = models.CharField(max_length=50)
