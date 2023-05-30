@@ -24,5 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', first),
     path('second/', second_func),
-    path('get_books/', books)
+    path('get_books/', books, name="books")
 ]

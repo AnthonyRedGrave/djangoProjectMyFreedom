@@ -1,5 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Book
+
 
 def books(request):
-    return HttpResponse("Список книг!")
+    books = Book.objects.all()
+    return render(request, "index.html", context={"books": books,
+                                                  "name": "Олег"})
+
