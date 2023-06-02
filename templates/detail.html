@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ book.title }}</title>
+</head>
+<body>
+<h1>{{ book.title }}</h1>
+<h2>{{ book.author }}</h2>
+<br>
+<p>Год: {{ book.year }}</p>
+<p>Рейтинг: {{ book.raiting }}</p>
+
+<p>Издатель: {{ book.publisher.title }}</p>
+<p>Язык: {{ book.publisher.get_language_display }}</p>
+
+{% if book.genre %}
+
+<p>Жанр: {{ book.genre.title }}</p>
+
+{% else %}
+
+<p>Жанр: не указан</p>
+
+{% endif %}
+
+<p>Теги: </p>
+
+{% for tag in book.tags.all %}
+    <b>{{ tag.title }}</b>
+{% endfor %}
+
+</body>
+</html>

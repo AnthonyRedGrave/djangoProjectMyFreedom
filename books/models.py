@@ -23,7 +23,7 @@ class Publisher(models.Model):
         return f"Издание: {self.title} {self.language}"
 
 
-# вторичная запись
+
 class Book(models.Model):
     title = models.CharField(max_length=50)
     author = models.CharField(max_length=50)

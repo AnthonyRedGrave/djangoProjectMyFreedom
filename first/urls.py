@@ -17,12 +17,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import first, second_func
-from books.views import books
+from books.views import books, get_book, get_genre_books
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/', first),
     path('second/', second_func),
-    path('get_books/', books, name="books")
+    path('get_books/', books, name="books"),
+
+    path('get_books/<int:id>/', get_book, name="get_book"),
+    path('get_genre/<str:title>/', get_genre_books, name="get_genre")
 ]
