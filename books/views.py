@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Book, Genre, Tag, Publisher
 from .forms import BookForm
 from django.http import HttpResponse
@@ -48,13 +48,17 @@ def add_book(request):
         form = BookForm()
         return render(request, "add_book.html", context={"form": form})
     elif request.method == "POST":
-
         publisher_id = request.POST['publisher']
         genre_id = request.POST['genre']
 
-        publisher = Publisher.objects.get(id=publisher_id)
-        genre=Genre.objects.get(id=genre_id)
-        book = Book(title = request.POST['title'],
+        if publisher_id != '' and genre_id != '':
+            publisher = Publisher.objects.get(id=publisher_id)
+            genre=Genre.objects.get(id=genre_id)
+        else:
+            publisher = None
+            genre = None
+
+        book = Book.objects.create(title = request.POST['title'],
                             author = request.POST['author'],
                             year=request.POST['year'],
                             raiting=request.POST['raiting'],
@@ -64,21 +68,11 @@ def add_book(request):
         book.tags.set(tags)
         book.save()
 
-        form = BookForm()
-        return render(request, "add_book.html", context={"form": form})
-        # request.POST
+        return redirect("books")
 
 
-# def create_book(request):
-#     print(request.POST)
-#     genre = Genre.objects.get(id=request.POST['genre'])
-#     print(genre)
-#     Book.objects.create(title=request.POST['title'],
-#                         author=request.POST['author'],
-#                         year=request.POST['year'],
-#                         tags=request.POST['tags'],
-#                         raiting=request.POST['raiting'],
-#                         # publisher=request.POST['publisher'],
-#                         genre=genre
-#                         )
-#     return HttpResponse("<h1>Получилось!</h1>")
+def search_book(request):
+    search_query = request.GET['search']
+    books = Book.objects.filter(year__contains=search_query)
+
+    return render(request, 'search_book.html', context={"books": books})

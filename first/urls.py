@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import first, second_func
-from books.views import books, get_book, get_genre_books, get_tag_books, add_book
+from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,5 +30,6 @@ urlpatterns = [
     path('get_tag/<str:title>/', get_tag_books, name="get_tag_books"),
 
     path('add_book/', add_book, name="add_book"),
+    path('seach_book/', search_book, name="search_book"),
     # path('create_book/', create_book, name="create_book")
 ]

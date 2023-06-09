@@ -2,21 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Книги</title>
+    <title>Поиск книг</title>
 </head>
 <body>
-    <form action="{% url 'search_book' %}" method="get">
-        {% csrf_token %}
-        <input placeholder="Введите название книги" type="text" name="search">
-        <input type="submit" value="OK">
-    </form>
-
-
-
-    <h1>
-        Список книг
-    </h1>
-
+    <h1>Поиск книг</h1>
     {% for book in books %}
         <p>
             Название: <a href="{% url 'get_book' book.id %}">
@@ -29,8 +18,5 @@
         <br>
 
     {% endfor %}
-
-    <a href="{% url 'add_book' %}">Добавить книгу</a>
-
 </body>
 </html>
