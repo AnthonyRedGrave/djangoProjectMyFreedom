@@ -30,7 +30,7 @@
 <p>Теги: </p>
 
 {% for tag in book.tags.all %}
-    <b>{{ tag.title }}</b>
+    <b> <a href="{% url 'get_tag_books' tag.title %}"> {{ tag.title }} </a> </b>
 {% endfor %}
 
 </body>

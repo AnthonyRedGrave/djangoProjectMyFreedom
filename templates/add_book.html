@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить новую книгу</title>
+</head>
+<body>
+    <h3>Страница с добавлением новой книги</h3>
+    <form action="{% url 'add_book' %}" method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <p>{{ field.label_tag }} {{ field }}</p>
+        {% endfor %}
+        <input type="submit" value="OK">
+    </form>
+</body>
+</html>
