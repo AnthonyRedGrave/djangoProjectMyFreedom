@@ -8,6 +8,12 @@
     <title>{{ book.title }}</title>
 </head>
 <body>
+
+
+{% if book.image %}
+<img style="width: 100px; height: 100px" src="{{ book.image.url }}">
+{% endif %}
+
 <h1>{{ book.title }}</h1>
 <h2>{{ book.author }}</h2>
 <br>
