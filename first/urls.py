@@ -17,7 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import first, second_func
-from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book
+from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book, delete_book
+
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,5 +35,8 @@ urlpatterns = [
 
     path('add_book/', add_book, name="add_book"),
     path('seach_book/', search_book, name="search_book"),
-    # path('create_book/', create_book, name="create_book")
+    path('delete_book/<int:id>/', delete_book, name="delete_book")
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

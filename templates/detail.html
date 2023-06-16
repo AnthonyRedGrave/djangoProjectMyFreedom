@@ -27,11 +27,17 @@
 
 {% endif %}
 
+<p>Время публикации на сайте: {{ book.created_at }}</p>
+
 <p>Теги: </p>
 
 {% for tag in book.tags.all %}
     <b> <a href="{% url 'get_tag_books' tag.title %}"> {{ tag.title }} </a> </b>
 {% endfor %}
+
+<br>
+<hr>
+<a href="{% url 'delete_book' book.id%}">Удалить книгу</a>
 
 </body>
 </html>

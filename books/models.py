@@ -36,6 +36,10 @@ class Book(models.Model):
 
     tags = models.ManyToManyField("Tag", related_name="books", blank=True)
 
+    created_at = models.DateTimeField(auto_now_add = True)
+
+    # image = models.ImageField(upload_to=)
+
     def __str__(self):
         # строковое представление объекта
         return f"Книга: {self.id} Название: {self.title} Автор: {self.author}"

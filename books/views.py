@@ -51,12 +51,16 @@ def add_book(request):
         publisher_id = request.POST['publisher']
         genre_id = request.POST['genre']
 
-        if publisher_id != '' and genre_id != '':
+        publisher = None
+        genre = None
+
+        if publisher_id != '':
             publisher = Publisher.objects.get(id=publisher_id)
-            genre=Genre.objects.get(id=genre_id)
-        else:
-            publisher = None
-            genre = None
+
+        if genre_id != '':
+            genre = Genre.objects.get(id=genre_id)
+
+
 
         book = Book.objects.create(title = request.POST['title'],
                             author = request.POST['author'],
@@ -72,7 +76,26 @@ def add_book(request):
 
 
 def search_book(request):
-    search_query = request.GET['search']
-    books = Book.objects.filter(year__contains=search_query)
+    title = request.GET['title']
+    genre = request.GET['genre']
+
+    books = Book.objects.all()
+
+    if title != '':
+        books = books.filter(title__contains=title)
+
+    if genre != '':
+        books = books.filter(genre__title__contains = genre)
 
     return render(request, 'search_book.html', context={"books": books})
+
+
+def delete_book(request, id):
+    try:
+        book = Book.objects.get(id=id)
+    except Book.DoesNotExist:
+        return HttpResponse(f"<h1>Книги с таким айди: {id} не существует!</h1>")
+
+    book.delete()
+
+    return redirect('books')
