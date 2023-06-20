@@ -38,7 +38,7 @@ class Book(models.Model):
 
     created_at = models.DateTimeField(auto_now_add = True)
 
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(default="default.jpg")
 
     def __str__(self):
         # строковое представление объекта

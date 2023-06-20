@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Обновить книгу</title>
+</head>
+<body>
+    <h1>Обновление книги</h1>
+
+    <h2>{{book.title}}</h2>
+
+    <form action="{% url 'update_book_by_id' book.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <p>{{ field.label_tag }} {{ field }}</p>
+        {% endfor %}
+        <input type="submit" value="OK">
+    </form>
+</body>
+</html>

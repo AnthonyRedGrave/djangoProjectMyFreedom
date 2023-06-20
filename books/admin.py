@@ -3,7 +3,7 @@ from .models import Book, Genre, Tag, Publisher
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ("id", "title", "raiting", "year", "publisher", "genre", "get_tags", "created_at")
+    list_display = ("id", "title", "raiting", "year", "publisher", "genre", "get_tags", "created_at", "image")
 
     def get_tags(self, obj):
         tags = obj.tags.all()
