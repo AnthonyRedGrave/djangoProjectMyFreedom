@@ -139,3 +139,5 @@ def update_book(request, id):
         book.tags.set(tags)
 
         book.save()
+
+        return redirect("get_book", id=book.id)
