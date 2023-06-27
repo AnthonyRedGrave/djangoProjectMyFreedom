@@ -12,8 +12,17 @@
         <input type="submit" value="OK">
     </form>
 
-    <a href="{% url 'register' %}">Регистрация</a>
+    {% if request.user.is_authenticated %}
 
+    <h1>Вы успешно вошли как {{ request.user.username }} </h1>
+    <a href="{% url 'logout' %}">Выход</a>
+
+    {% else %}
+
+    <a href="{% url 'register' %}">Регистрация</a>
+    <a href="{% url 'login' %}">Вход</a>
+
+    {% endif %}
 
     <h1>
         Список книг

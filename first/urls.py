@@ -19,7 +19,7 @@ from django.urls import path
 from .views import first, second_func
 from books.views import books, get_book, get_genre_books, get_tag_books, add_book, search_book, delete_book, update_book
 
-from users.views import register_user, login_user
+from users.views import register_user, login_user, logout_user
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -42,7 +42,8 @@ urlpatterns = [
 
     path('registration/', register_user, name="register"),
 
-    path('login/', login_user, name='login')
+    path('login/', login_user, name='login'),
+    path('logout/', logout_user, name='logout')
 ]
 
 if settings.DEBUG:
