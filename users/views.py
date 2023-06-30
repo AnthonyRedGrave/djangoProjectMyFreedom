@@ -51,6 +51,8 @@ def login_user(request):
 
         return redirect('books')
 
+
 def logout_user(request):
     logout(request)
-    return redirect('books')
+    if request.environ['HTTP_REFERER'] == 'http://localhost:8000/get_books/':
+        return redirect('books')
