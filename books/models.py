@@ -24,7 +24,6 @@ class Publisher(models.Model):
         return f"Издание: {self.title} {self.language}"
 
 
-
 class Book(models.Model):
     title = models.CharField(max_length=50)
     author = models.CharField(max_length=50)
@@ -61,3 +60,25 @@ class Genre(models.Model):
 
     def __str__(self):
         return f"Жанр: {self.id}, {self.title}"
+
+
+class Comment(models.Model):
+    content = models.CharField(max_length=300)
+    raiting = models.IntegerField()
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name='comments')
+
+
+    book = models.ForeignKey(Book,
+                             on_delete=models.CASCADE,
+                             related_name='comments')
+
+    date_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Комментарий: {self.content}, {self.user.username}"
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'

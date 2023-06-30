@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Book, Genre, Tag, Publisher
+from .models import Book, Genre, Tag, Publisher, Comment
 from .forms import BookForm
 from django.http import HttpResponse
 
@@ -153,3 +153,14 @@ def update_book(request, id):
             book.save()
 
             return redirect("get_book", id=book.id)
+
+
+def add_comment(request, id):
+    print(request.POST)
+    raiting = 5
+    book = Book.objects.get(id = id)
+    Comment.objects.create(content = request.POST['comment'],
+                           raiting = raiting,
+                           user = request.user,
+                           book = book)
+    return redirect("get_book", id=id)
