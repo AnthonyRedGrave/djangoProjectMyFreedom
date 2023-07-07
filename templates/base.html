@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Главная{% endblock %}</title>
+</head>
+
+<body>
+
+<form action="{% url 'search_book' %}" method="get">
+    {% csrf_token %}
+    <input placeholder="Введите название книги" type="text" name="title">
+    <input placeholder="Введите жанр" type="text" name="genre">
+    <input placeholder="Введите цену до" type="number" name="price_lt">
+    <input type="submit" value="OK">
+</form>
+
+{% block content %}
+
+{% endblock %}
+
+</body>
+</html>

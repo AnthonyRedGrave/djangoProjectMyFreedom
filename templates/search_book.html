@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Поиск книг</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}
+    Поиск
+{% endblock %}
+
+{% block content%}
+
     <h1>Поиск книг</h1>
 
     {% if books %}
+
+    <h3>{{ result_string }}</h3>
 
     {% for book in books %}
         <p>
@@ -18,6 +21,7 @@
         <p>Автор: {{book.author}}</p>
         <p>Жанр: {{book.genre.title}}</p>
         <p>Год: {{book.year}}</p>
+        <p>Цена: {{book.price}}</p>
         <br>
 
     {% endfor %}
@@ -26,5 +30,4 @@
         <h3>Книг с такими фильтрами нет!</h3>
     {% endif %}
 
-</body>
-</html>
+{% endblock %}

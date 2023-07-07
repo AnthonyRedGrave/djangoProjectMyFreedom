@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 import django
-
+from django.http import HttpResponse
 
 def register_user(request):
     if request.method == "GET":
@@ -39,10 +39,6 @@ def login_user(request):
     else:
         username = request.POST['username']
         password = request.POST['password']
-        # authenticate проверяет данные ей креды (имя пользователя и пароль)
-        # если у юзера с таким именем действительно такой пароль
-        # функция вернет самого юзера
-        # если нет - вернет None
         user = authenticate(username = username, password = password)
         if user is not None:
             login(request, user = user)
@@ -53,6 +49,9 @@ def login_user(request):
 
 
 def logout_user(request):
-    logout(request)
-    if request.environ['HTTP_REFERER'] == 'http://localhost:8000/get_books/':
-        return redirect('books')
+    if request.user.is_authenticated:
+        logout(request)
+        if request.environ['HTTP_REFERER'] == 'http://localhost:8000/get_books/':
+            return redirect('books')
+    else:
+        return HttpResponse("<h1>404</h1>")

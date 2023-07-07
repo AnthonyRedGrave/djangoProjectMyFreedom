@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Book, Genre, Tag, Publisher, Comment
 from .forms import BookForm
 from django.http import HttpResponse
+from django.utils.datastructures import MultiValueDictKeyError
 
 
 #CRUD = CREATE READ! UPDATE DELETE
@@ -82,18 +83,29 @@ def add_book(request):
         return HttpResponse("<h1>У вас нет прав на это действие!</h1>")
 
 def search_book(request):
+    print(request.GET)
     title = request.GET['title']
     genre = request.GET['genre']
+    price_lt = request.GET['price_lt']
 
     books = Book.objects.all()
 
+    result_string = "Результат поиска "
+
     if title != '':
+        result_string += f"по названию: {title}, "
         books = books.filter(title__contains=title)
 
     if genre != '':
+        result_string += f"по жанру: {genre}, "
         books = books.filter(genre__title__contains = genre)
 
-    return render(request, 'search_book.html', context={"books": books})
+    if price_lt != '':
+        result_string += f"по цене до: {price_lt}, "
+        books = books.filter(price__lte = price_lt)
+
+    return render(request, 'search_book.html', context={"books": books,
+                                                        "result_string": result_string})
 
 
 def delete_book(request, id):
@@ -156,11 +168,36 @@ def update_book(request, id):
 
 
 def add_comment(request, id):
-    print(request.POST)
-    raiting = 5
-    book = Book.objects.get(id = id)
-    Comment.objects.create(content = request.POST['comment'],
-                           raiting = raiting,
-                           user = request.user,
-                           book = book)
-    return redirect("get_book", id=id)
+    if request.user.is_authenticated:
+        raiting = 5
+
+        try:
+            book = Book.objects.get(id = id)
+        except Book.DoesNotExist:
+            return HttpResponse("<h1>Такой книги не существует</h1>")
+
+        try:
+            Comment.objects.create(content = request.POST['comment'],
+                                   raiting = raiting,
+                                   user = request.user,
+                                   book = book)
+        except MultiValueDictKeyError:
+            return HttpResponse("<h1>404</h1>")
+        return redirect("get_book", id=id)
+    else:
+        return HttpResponse("<h1>Вы не авторизованы в системе!</h1>")
+
+
+def buy_book(request, id):
+    try:
+        book = Book.objects.get(id = id)
+    except Book.DoesNotExist:
+        return HttpResponse("<h1>Такой книги не существует!</h1>")
+
+    if book.count != 0:
+        book.count = book.count - 1
+        book.save()
+    else:
+        return HttpResponse("<h1>404</h1>")
+
+    return HttpResponse("<h1>Страница покупки</h1>")
