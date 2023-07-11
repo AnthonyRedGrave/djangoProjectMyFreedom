@@ -51,7 +51,6 @@ def login_user(request):
 def logout_user(request):
     if request.user.is_authenticated:
         logout(request)
-        if request.environ['HTTP_REFERER'] == 'http://localhost:8000/get_books/':
-            return redirect('books')
+        return redirect('books')
     else:
         return HttpResponse("<h1>404</h1>")

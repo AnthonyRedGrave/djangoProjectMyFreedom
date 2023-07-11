@@ -51,6 +51,17 @@
 
     {% endif %}
 
+    {% if request.user.is_authenticated and show_favorite_button %}
+
+    <a href="{% url 'favorite_book' book.id %}">Добавить в избранное</a>
+
+    {% else %}
+
+    <p>Добавлено в избранное</p>
+
+    {% endif %}
+
+    <br>
     <br>
     <hr>
 
@@ -61,6 +72,8 @@
 
     {% endif %}
 
+    <br>
+    <br>
 
     {% if request.user.is_authenticated %}
         <form action="{% url 'add_comment' book.id %}" method="post">

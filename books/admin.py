@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Genre, Tag, Publisher, Comment
+from .models import Book, Genre, Tag, Publisher, Comment, Favorite
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -18,3 +18,4 @@ admin.site.register(Genre)
 admin.site.register(Tag)
 admin.site.register(Publisher)
 admin.site.register(Comment)
+admin.site.register(Favorite)

@@ -9,7 +9,8 @@
     {% if request.user.is_authenticated %}
 
     <h1>Вы успешно вошли как {{ request.user.username }} </h1>
-    <a href="{% url 'logout' %}">Выход</a>
+    <h3><a href="{% url 'favorites' %}">Избранное</a></h3>
+    <h3><a href="{% url 'logout' %}">Выход</a></h3>
 
     {% else %}
 
