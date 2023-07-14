@@ -4,25 +4,36 @@ from .forms import BookForm
 from django.http import HttpResponse
 from django.utils.datastructures import MultiValueDictKeyError
 
-
-def books(request):
-    books = Book.objects.all()
-    return render(request, "index.html", context={"books": books})
+from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 
-def get_book(request, id):
-    try:
-        book = Book.objects.get(id=id)
-    except Book.DoesNotExist:
-        return HttpResponse(f"<h1>Книги с таким айди: {id} не существует!</h1>")
+class BookListView(ListView):
+    model = Book
+    context_object_name = 'my_new_books'
+    queryset = Book.objects.all()
 
-    show_favorite_button = True
 
-    if Favorite.objects.filter(book = book, user = request.user):
-        show_favorite_button = False
+class BookDetailView(DetailView):
+    model = Book
 
-    return render(request, "detail.html", context={"book": book,
-                                                   "show_favorite_button": show_favorite_button})
+    def get_context_data(self, **kwargs):
+        # получение первоначального контекста
+        context = super().get_context_data(**kwargs)
+
+        # получение книги
+        book = self.get_object()
+        show_favorite_button = True
+
+        # если пользователь авторизован, только в таком случае
+        # идем смотреть добавлял ли пользователь в избранное книгу
+        if self.request.user.is_authenticated:
+            if Favorite.objects.filter(book=book, user=self.request.user):
+                show_favorite_button = False
+
+        context['show_favorite_button'] = show_favorite_button
+
+        return context
 
 
 def get_genre_books(request, title):

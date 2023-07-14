@@ -23,7 +23,7 @@
         Список книг
     </h1>
 
-    {% for book in books %}
+    {% for book in my_new_books %}
         <p>
             Название: <a href="{% url 'get_book' book.id %}">
                 {{book.title}}

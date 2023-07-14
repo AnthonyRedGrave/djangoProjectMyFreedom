@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block content %}
-
     {% if book.image %}
     <img style="width: 100px; height: 100px" src="{{ book.image.url }}">
     {% endif %}
@@ -54,6 +53,8 @@
     {% if request.user.is_authenticated and show_favorite_button %}
 
     <a href="{% url 'favorite_book' book.id %}">Добавить в избранное</a>
+
+    {% elif not request.user.is_authenticated%}
 
     {% else %}
 
