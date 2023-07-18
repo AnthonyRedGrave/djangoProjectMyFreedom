@@ -13,6 +13,19 @@ class BookListView(ListView):
     context_object_name = 'my_new_books'
     queryset = Book.objects.all()
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        # получение первоначального контекста
+        context = super().get_context_data(**kwargs)
+
+        # запрос в бд получить все теги
+        tags = Tag.objects.all()
+
+        # добавление в контекст новую пару
+        context['tags'] = tags
+
+        # get_context_data обязательно возвращает контекст
+        return context
+
 
 class BookDetailView(DetailView):
     model = Book
@@ -93,6 +106,51 @@ def add_book(request):
             return redirect("books")
     else:
         return HttpResponse("<h1>У вас нет прав на это действие!</h1>")
+
+
+def search_book_by_tags(request):
+    # получаем строку которую ввел юзер из тела ГЕТ запроса
+    tags_input:str = request.GET['tags_input']
+
+    # инициализируем пустой список для будущих сообщений об ошибках
+    messages = []
+
+    # превращаем строку из тела запроса в список с разделителем ", "
+    tags_list = tags_input.split(', ')
+
+    # инициализируем пустой список с найденными тегами
+    tags = []
+
+    # список со всеми книгами у этих найденных тегов
+    tag_books = []
+
+    # проходимся по списку из тегов, который ввел юзер
+    for tag_title in tags_list:
+        try:
+            # если тега с таким title не существует
+            # заполняем список messages для отображения ошибок на странице
+
+            # в обратном случае - добавляем найденный тег (объект) в список tags
+            tag = Tag.objects.get(title = tag_title)
+            tags.append(tag)
+        except Tag.DoesNotExist:
+            messages.append(f"Тега с таким названием не существует! {tag_title}")
+
+    # проходимся по списку (list) из найденных тегов
+    # у каждого тега есть книги, через related_name books и all()
+    # получаем список (queryset) из всех книг у данного тега
+    # и запихиваем книгу в список tag_books
+    for tag in tags:
+        for book in tag.books.all():
+            tag_books.append(book)
+
+
+    # могут попасться дубликаты книг, благодаря функции set мы избавляемся от дублей
+    return render(
+        request, "tag_detail.html", context={"tag_books": set(tag_books),
+                                             "tag": None,
+                                             "messages": messages}
+    )
 
 
 def search_book(request):
@@ -178,7 +236,7 @@ def update_book(request, id):
 
             book.save()
 
-            return redirect("get_book", id=book.id)
+            return redirect("get_book", pk=book.id)
 
 
 def add_comment(request, id):
@@ -199,7 +257,7 @@ def add_comment(request, id):
             )
         except MultiValueDictKeyError:
             return HttpResponse("<h1>404</h1>")
-        return redirect("get_book", id=id)
+        return redirect("get_book", pk=id)
     else:
         return HttpResponse("<h1>Вы не авторизованы в системе!</h1>")
 
@@ -231,7 +289,7 @@ def favorite_book(request, id):
     Favorite.objects.create(book = book,
                             user = request.user)
 
-    return redirect("get_book", id=book.id)
+    return redirect("get_book", pk=book.id)
 
 
 def favorites(request):

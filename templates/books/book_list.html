@@ -18,6 +18,20 @@
     <a href="{% url 'login' %}">Вход</a>
 
     {% endif %}
+    <div class="container text-center" style="width: 700px;">
+      <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+
+         {% for tag in tags %}
+
+            <div class="col" style="border: 1px solid black; margin: 5px;">
+              <div class="p-3">
+                  <a href="{% url 'get_tag_books' tag.title %}">{{ tag.title }}</a>
+              </div>
+            </div>
+
+        {% endfor %}
+      </div>
+    </div>
 
     <h1>
         Список книг

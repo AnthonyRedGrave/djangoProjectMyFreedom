@@ -1,14 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ tag.title }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}Фильтрация по тегу{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'search_book_by_tags' %}" method="get" style="width: 300px; margin: 20px;">
+    {% csrf_token %}
+    <input placeholder="Введите теги" class="form-control" name="tags_input">
+    <input type="submit" value="OK">
+</form>
+
+{% if messages %}
+
+    {% for message in messages %}
+       <div class="alert alert-danger" role="alert">
+           {{ message }}
+       </div>
+    {% endfor %}
+
+{% endif %}
+
     <h1>Тег: {{ tag.title }}</h1>
     <h3>Все книги с таким тегом: </h3>
+
     {% for book in tag_books %}
         <p>{{ book.title }}</p>
     {% endfor %}
-</body>
-</html>
+
+{% endblock %}
