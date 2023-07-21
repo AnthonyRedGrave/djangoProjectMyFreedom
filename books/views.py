@@ -6,6 +6,29 @@ from django.utils.datastructures import MultiValueDictKeyError
 
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.http import JsonResponse
+
+from .serializers import BookSerializer, GenreSerializer
+
+
+def book_detail(request):
+    # book = Book.objects.get(id = 12)
+    # serializer = BookSerializer(book)
+
+    genre = Genre.objects.get(id = 1)
+    #
+    serializer = GenreSerializer(genre)
+
+    return JsonResponse(data=serializer.data)
+
+    # return JsonResponse({
+    #     'title':book.title,
+    #     'author': book.author,
+    #     'price': book.price,
+    #     'genre': book.genre.title,
+    #     'count': book.count},
+    #     json_dumps_params={'ensure_ascii': False},
+    #     content_type='application/json; charset=utf-8')
 
 
 class BookListView(ListView):
