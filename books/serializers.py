@@ -1,6 +1,28 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Book, Genre
+from .models import Book, Genre, Publisher
 from rest_framework import serializers
+
+
+# API - Application Programming Interface Список команд, благодаря которым можно работать с сервером
+
+
+class CreateBookSerializer(ModelSerializer):
+
+    tags_ids = serializers.CharField()
+
+    def validate_tags_ids(self, value: str):
+        # из строки сделать список
+
+        # продолжить валидировать переданные теги
+        value = value.split(', ')
+
+        print(value)
+
+        return "Теги"
+
+    class Meta:
+        model = Book
+        fields = ['title', 'author', 'year', 'price', 'raiting', 'genre', 'tags_ids']
 
 
 class GenreBookSerializer(ModelSerializer):
@@ -17,13 +39,18 @@ class GenreSerializer(ModelSerializer):
         fields = ["id", "title", "books"]
 
 
+class PublisherSerializer(ModelSerializer):
+    class Meta:
+        model = Publisher
+        fields = ['id', 'title', 'language']
+
+
 class BookSerializer(ModelSerializer):
     genre_title = serializers.SerializerMethodField()
     publisher_title = serializers.SerializerMethodField()
 
     tags_titles = serializers.SerializerMethodField()
 
-    genre = GenreSerializer()
 
     def get_tags_titles(self, book):
         tags = []
@@ -33,10 +60,15 @@ class BookSerializer(ModelSerializer):
         return tags
 
     def get_publisher_title(self, book):
-        return book.publisher.title
+        if book.publisher is not None:
+            return book.publisher.title
+        return "Нет издателя"
 
     def get_genre_title(self, book):
-        return book.genre.title
+        try:
+            return book.genre.title
+        except AttributeError:
+            return "Нет жанра"
 
     class Meta:
         model = Book
@@ -49,5 +81,4 @@ class BookSerializer(ModelSerializer):
             "count",
             "price",
             "tags_titles",
-            "genre"
         ]

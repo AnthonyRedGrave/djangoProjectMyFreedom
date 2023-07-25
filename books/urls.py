@@ -13,7 +13,7 @@ from books.views import (
     delete_from_favorites,
     BookListView,
     BookDetailView,
-    search_book_by_tags, book_detail
+    search_book_by_tags, book_detail, get_all_books, create_book, get_all_genres, get_all_publishers
 )
 
 
@@ -33,9 +33,14 @@ urlpatterns = [
     path("favorites/", favorites, name="favorites"),
     path("delete_from_favorites/<int:id>/", delete_from_favorites, name="delete_from_favorites"),
 
+    # HTML
     path("get_books/", BookListView.as_view(), name="books"),
     path("detail_book/<int:pk>/", BookDetailView.as_view(), name="get_book"),
 
-
-    path("book_detail/", book_detail)
+    # JSON API
+    path("get_all_books/", get_all_books),
+    path("get_book/<int:id>/", book_detail),
+    path("create_book/", create_book),
+    path("get_all_genres/", get_all_genres),
+    path("get_all_publishers/", get_all_publishers)
 ]

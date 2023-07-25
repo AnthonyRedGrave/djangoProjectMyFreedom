@@ -8,27 +8,64 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.http import JsonResponse
 
-from .serializers import BookSerializer, GenreSerializer
+from .serializers import BookSerializer, GenreSerializer, CreateBookSerializer, PublisherSerializer
+from rest_framework.decorators import api_view
 
 
-def book_detail(request):
-    # book = Book.objects.get(id = 12)
-    # serializer = BookSerializer(book)
+def get_all_publishers(request):
+    publishers = Publisher.objects.all()
+    serializer = PublisherSerializer(publishers, many=True)
+    return JsonResponse(data=serializer.data, safe=False)
 
-    genre = Genre.objects.get(id = 1)
-    #
-    serializer = GenreSerializer(genre)
+
+def get_all_genres(request):
+    genres = Genre.objects.all()
+
+    serializer = GenreSerializer(genres, many=True)
+    return JsonResponse(data = serializer.data, safe=False)
+
+def get_all_books(request):
+    # вьюшка должна возвращать все книги в json формате
+    # сделать запрос в бд и получить все книги
+    # все книги необходимо сериализовать
+    # вернуть все книги в json формате
+    books = Book.objects.all()
+    serializer = BookSerializer(books, many=True)
+
+    return JsonResponse(data=serializer.data, safe=False)
+
+
+def book_detail(request, id):
+    try:
+        book = Book.objects.get(id = id)
+    except Book.DoesNotExist:
+        return JsonResponse(data={"id":"Book not found!"})
+
+    serializer = BookSerializer(book)
 
     return JsonResponse(data=serializer.data)
 
-    # return JsonResponse({
-    #     'title':book.title,
-    #     'author': book.author,
-    #     'price': book.price,
-    #     'genre': book.genre.title,
-    #     'count': book.count},
-    #     json_dumps_params={'ensure_ascii': False},
-    #     content_type='application/json; charset=utf-8')
+@api_view(['POST',])
+def create_book(request):
+    # request.POST - тело запроса
+    # с request.POST можно работать как с обычным словарем
+    # вызываю сериализатор для валидации данных
+    serializer = CreateBookSerializer(data=request.POST)
+
+    if serializer.is_valid():
+        print("все данные валидны")
+    else:
+        print(serializer.errors)
+        return JsonResponse(data = serializer.errors)
+
+    # serializer.validated_data - словарь в котором находятся "чистые" данные
+    # book = Book.objects.create(**serializer.validated_data)
+    # book.tags.set()
+    #
+    # # второй сериализатор использую для формирования ответа
+    # serializer = BookSerializer(book)
+    # return JsonResponse(data = serializer.data)
+    return JsonResponse(data = {"da": "ahsdihas"})
 
 
 class BookListView(ListView):
